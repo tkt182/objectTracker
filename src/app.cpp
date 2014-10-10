@@ -42,7 +42,6 @@ void App::setup(){
 void App::update(){
 
 	_polygonShape->update();
-	_current = _polygonShape->getCurrentPos();
 
 
 }
@@ -57,17 +56,17 @@ void App::draw(){
 	ofColor white  = ofColor::fromHex(0xffffff);
 
 
+	ofVec3f target = _polygonShape->getCurrentPos();
+
 
 	_ccam.begin();
 
 	/////// カメラ関連の設定 ///////
 
 	// カメラの基本位置と注視点を決定
-	_ccam.setCamPos(_current);
-	_ccam.setTargetPos(_current);
-	//_ccam.setCamPos(_polygonShape->getCurrentPos());
-	//_ccam.setTargetPos(_polygonShape->getCurrentPos());
-
+	_ccam.setCamPos(target);
+	_ccam.setTargetPos(target);
+	
 
 	// マウス操作による回転の座標変換をカメラに加える
 	_ccam.execRotate();

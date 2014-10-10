@@ -32,10 +32,7 @@ class App : public ofBaseApp{
 
 	private:
 	
-		ofVec3f _current;
-		
 
-	
 		//a place to store the mouse position so we can measure incremental change  
 		ofVec2f _lastMouse;
 	
@@ -45,10 +42,12 @@ class App : public ofBaseApp{
 		// カメラ
 		CustomCam _ccam;
 
+		// ターゲットオブジェクト
 		PolygonShape* _polygonShape;
 
 
 		// 背景に表示する球
 		Stars* _stars;
+
 
 };
