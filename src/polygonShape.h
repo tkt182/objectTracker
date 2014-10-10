@@ -28,6 +28,8 @@ private:
 
 	deque<ofVec3f> _pathVertices;    // 移動履歴の頂点情報
 	ofMesh         _pathLines;       // 移動履歴のメッシュ
+	ofVbo          _vbo;
+
 
 	int            _actionFrame;     // 次に中心座標を変更するフレーム 
 	int            _frameCounter;

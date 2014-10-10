@@ -11,6 +11,7 @@ PolygonShape::~PolygonShape(){
 void PolygonShape::setup(){
 
 	_currentPos = ofVec3f(0.0, 0.0, 0.0);
+	_pathLines.addVertex(_currentPos);
 
 	_moveDir = ofVec3f(
 		ofRandom(-1.0, 1.0),
@@ -36,6 +37,7 @@ void PolygonShape::setup(){
 	_material.setShininess(_shininess);
 
 
+
 }
 
 
@@ -59,6 +61,9 @@ void PolygonShape::update(){
 	this->updateCurrentPos();
 	this->updateAngle();
 
+	_pathLines.addVertex(_currentPos);
+	_vbo.setMesh(_pathLines, GL_DYNAMIC_DRAW);
+
 	/*
 	std::cout << "X : " << _currentPos.x << std::endl;
 	std::cout << "Y : " << _currentPos.y << std::endl;
@@ -79,11 +84,16 @@ void PolygonShape::draw(){
 
 		ofSetSphereResolution(4);
 		ofDrawSphere(_currentPos, 20.0);
-		
+
 		_material.end();
 	
 	}
 	ofPopMatrix();
+
+	ofSetLineWidth(1.0);
+	_vbo.draw(GL_LINE_STRIP, 0, _pathLines.getNumVertices());
+
+
 }
 
 
