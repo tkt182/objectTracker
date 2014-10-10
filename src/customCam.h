@@ -57,6 +57,7 @@ public:
 
 
 
+
 private:
 
 	ofVec3f _pos;                   // ƒJƒƒ‰ˆÊ’u

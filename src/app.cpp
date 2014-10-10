@@ -22,10 +22,17 @@ void App::setup(){
 	ofSetVerticalSync(true);
 	ofSetFrameRate(60);
 	ofEnableDepthTest();
+	ofSetSmoothLighting(false);
 	//ofSetFullscreen(true);
 	//ofHideCursor();
 
 	ofBackground(0, 0, 0);
+
+	_light.setDirectional();
+	_light.setAmbientColor(ofFloatColor(0.1, 0.4, 0.1, 1.0));
+	_light.setDiffuseColor(ofFloatColor(0.2, 0.7, 0.2, 1.0));
+	_light.setSpecularColor(ofFloatColor(0.2, 0.8, 0.2, 1.0));
+
 
 	_dampen = 0.4;
 
@@ -50,22 +57,17 @@ void App::update(){
 void App::draw(){
 
 
-	ofColor cyan = ofColor::fromHex(0x00abec);
-	ofColor magenta = ofColor::fromHex(0xec008c);
-	ofColor yellow = ofColor::fromHex(0xffee00);
-	ofColor white  = ofColor::fromHex(0xffffff);
 
-
-	ofVec3f target = _polygonShape->getCurrentPos();
-
+	ofVec3f targetPos = _polygonShape->getCurrentPos();
+	ofVec3f lightPos  = targetPos + 10.0;
 
 	_ccam.begin();
 
 	/////// カメラ関連の設定 ///////
 
 	// カメラの基本位置と注視点を決定
-	_ccam.setCamPos(target);
-	_ccam.setTargetPos(target);
+	_ccam.setCamPos(targetPos);
+	_ccam.setTargetPos(targetPos);
 	
 
 	// マウス操作による回転の座標変換をカメラに加える
@@ -98,22 +100,17 @@ void App::draw(){
 	ofPushMatrix();
 	{
 
-		ofSetColor(white);
-
 		_stars->draw();
 
-
-		// translate and rotate to the current position and orientation
-		ofPushMatrix();
-		{
-
-			ofSetColor(255);
-			_polygonShape->draw();
+		_light.enable();
+		_light.setPosition(lightPos);
+		//_light.setSpotlight();
 
 
-		}
-		ofPopMatrix();
+		_polygonShape->draw();
 
+		//_light.end();
+		_light.disable();
 
 	}
 	ofPopMatrix();

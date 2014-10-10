@@ -25,6 +25,17 @@ void PolygonShape::setup(){
 	_frameCounter = 0;
 
 
+	_ambient  = ofFloatColor(0.1, 0.4, 0.1, 1.0);
+	_diffuse  = ofFloatColor(0.2, 0.7, 0.2, 1.0);
+	_specular = ofFloatColor(1.0, 1.0, 1.0, 1.0);
+	_shininess  = 100.0;
+
+	_material.setAmbientColor(_ambient);
+	_material.setDiffuseColor(_diffuse);
+	_material.setSpecularColor(_specular);
+	_material.setShininess(_shininess);
+
+
 }
 
 
@@ -63,8 +74,14 @@ void PolygonShape::draw(){
 	ofPushMatrix();
 	{
 		ofRotate(_angle, _currentPos.x, _currentPos.y, _currentPos.z);
-		ofSetSphereResolution(8);
+		
+		_material.begin();
+
+		ofSetSphereResolution(4);
 		ofDrawSphere(_currentPos, 20.0);
+		
+		_material.end();
+	
 	}
 	ofPopMatrix();
 }

@@ -42,9 +42,11 @@ class App : public ofBaseApp{
 		// カメラ
 		CustomCam _ccam;
 
+		// ライト
+		ofLight   _light;
+
 		// ターゲットオブジェクト
 		PolygonShape* _polygonShape;
-
 
 		// 背景に表示する球
 		Stars* _stars;

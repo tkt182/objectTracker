@@ -21,6 +21,8 @@ private:
 	float    _limit;    // 球の座標を生成する際のMAX値
 	ofVec3f* _pos;      // 球の中心座標
 
+	ofFloatColor  _color;    // 球の色
+
 
 };
 

@@ -22,7 +22,7 @@ private:
 
 	ofVec3f        _currentPos;      // 中心座標
 	ofVec3f        _moveDir;         // オブジェクトの進行方向
-	ofVec3f        _velocity;
+
 	float          _distance;        // 移動する距離
 	float          _angle;
 
@@ -32,7 +32,15 @@ private:
 	int            _actionFrame;     // 次に中心座標を変更するフレーム 
 	int            _frameCounter;
 
-	
+	ofFloatColor   _ambient;
+	ofFloatColor   _diffuse;         
+	ofFloatColor   _specular;
+	float          _shininess;
+
+	ofMaterial     _material;        // オブジェクトのマテリアル
+
+
+
 	void updateMoveDir();
 	void updateDistance();
 	void updateCurrentPos();
