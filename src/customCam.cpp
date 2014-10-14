@@ -3,6 +3,9 @@
 
 CustomCam::CustomCam(float distance){
 
+
+	this->setFarClip(10000.0);
+
 	// ƒJƒƒ‰‚Æ’‹“_‚Ì‹——£ 
 	_distance = distance;
 
