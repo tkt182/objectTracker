@@ -19,10 +19,11 @@ void PolygonShape::setup(){
 		ofRandom(-1.0, 1.0)
 	).normalize();
 
-	_distance = ofRandom(1, 10);
-	_angle    = 0.0;
+	_velocitySize = ofRandom(5.0, 20.0);
+	_frictionSize = 0.1;
+	_angle        = 0.0;
 
-	_actionFrame  = static_cast<int>(ofRandom(5, 180));
+	_actionFrame  = 0;
 	_frameCounter = 0;
 
 
@@ -46,9 +47,10 @@ void PolygonShape::update(){
 	if(_frameCounter > _actionFrame){
 
 		this->updateMoveDir();
-		this->updateDistance();
-		
-		_actionFrame  = static_cast<int>(ofRandom(5, 180));
+		this->updateFriction();
+		this->updateVelocity();
+
+		_actionFrame  = static_cast<int>(ofRandom(5, 50));
 		_frameCounter = 0;
 
 	
@@ -107,16 +109,25 @@ void PolygonShape::updateMoveDir(){
 	
 }
 
-void PolygonShape::updateDistance(){
 
-	_distance = ofRandom(1, 10);
+void PolygonShape::updateVelocity(){
+
+	_velocitySize = ofRandom(5.0, 20.0);
+	_velocity     = _moveDir.getScaled(_velocitySize); 
+	
+}
+
+void PolygonShape::updateFriction(){
+
+	_friction     = _moveDir.getScaled(_frictionSize);
 
 }
 
+
 void PolygonShape::updateCurrentPos(){
 
-	_currentPos += _moveDir.getScaled(_distance);
-	
+	_currentPos += _velocity - _friction;
+
 }
 
 void PolygonShape::updateAngle(){

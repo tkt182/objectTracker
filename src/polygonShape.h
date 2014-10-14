@@ -22,8 +22,11 @@ private:
 
 	ofVec3f        _currentPos;      // 中心座標
 	ofVec3f        _moveDir;         // オブジェクトの進行方向
+	ofVec3f        _velocity;        // 速度ベクトル
+	ofVec3f        _friction;        // 摩擦ベクトル
 
-	float          _distance;        // 移動する距離
+	float          _velocitySize;    // 移動する速度(スカラー値)
+	float          _frictionSize;    // 摩擦の大きさ(スカラー値)
 	float          _angle;
 
 	deque<ofVec3f> _pathVertices;    // 移動履歴の頂点情報
@@ -45,6 +48,8 @@ private:
 
 	void updateMoveDir();
 	void updateDistance();
+	void updateVelocity();
+	void updateFriction();
 	void updateCurrentPos();
 	void updateAngle();
 
