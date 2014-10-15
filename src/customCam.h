@@ -11,7 +11,7 @@ public:
 
 
 	CustomCam(float distance = 100.0);
-	~CustomCam();
+	virtual ~CustomCam();
 
 
 	// ƒJƒƒ‰‚ÌŠî–{ˆÊ’u‚ğŒˆ’è

@@ -19,10 +19,13 @@ void PolygonShape::setup(){
 		ofRandom(-1.0, 1.0)
 	).normalize();
 
-	_velocitySize = ofRandom(5.0, 20.0);
-	_frictionSize = 0.1;
+	_distance     = ofRandom(1.0, 10.0);
+	_velocitySize = ofRandom(1.0, 10.0);
+	_frictionSize = 10.0;
 	_angle        = 0.0;
 
+	_moveStep     = 25;
+	_stepCounter  = 0;
 	_actionFrame  = 0;
 	_frameCounter = 0;
 
@@ -47,10 +50,11 @@ void PolygonShape::update(){
 	if(_frameCounter > _actionFrame){
 
 		this->updateMoveDir();
+		this->updateDistination();
 		this->updateFriction();
 		this->updateVelocity();
 
-		_actionFrame  = static_cast<int>(ofRandom(5, 50));
+		_actionFrame  = static_cast<int>(ofRandom(10, 50));
 		_frameCounter = 0;
 
 	
@@ -99,6 +103,7 @@ void PolygonShape::draw(){
 }
 
 
+
 void PolygonShape::updateMoveDir(){
 
 	_moveDir = ofVec3f(
@@ -109,12 +114,19 @@ void PolygonShape::updateMoveDir(){
 	
 }
 
+void PolygonShape::updateDistination(){
+
+	_distance    = ofRandom(30.0, 300.0);
+	_distination = _moveDir.getScaled(_distance);
+	
+
+}
+
 
 void PolygonShape::updateVelocity(){
 
-	_velocitySize = ofRandom(5.0, 20.0);
-	_velocity     = _moveDir.getScaled(_velocitySize); 
-	
+	_velocity = (_distination - _currentPos) / _moveStep;
+
 }
 
 void PolygonShape::updateFriction(){
@@ -126,8 +138,31 @@ void PolygonShape::updateFriction(){
 
 void PolygonShape::updateCurrentPos(){
 
-	_currentPos += _velocity - _friction;
 
+	float distance = _velocity.length() - _friction.length();
+	//std::cout << "DISTANCE : " << distance << std::endl;
+
+	if(_stepCounter > _moveStep){
+
+		_stepCounter = 0;
+	
+	}else{
+	
+		_stepCounter++;
+	}
+
+	ofVec3f diff     = _distination - _currentPos;
+	float   diffSize = diff.length();
+
+	//std::cout << "DIFF SIZE : " << hoge << std::endl;
+	//std::cout << "DIST X : " << _distination.x << std::endl;
+	//std::cout << "CURR X : " << _currentPos.x  << std::endl;
+
+
+	if(diffSize >= 10.0){
+		_currentPos += _velocity;
+	}
+	
 }
 
 void PolygonShape::updateAngle(){
