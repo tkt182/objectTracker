@@ -8,7 +8,7 @@ class Stars{
 public:
 
 	Stars(int num = 1000, float radius = 4.0);
-	~Stars();
+	virtual ~Stars();
 
 	void setup();
 	void draw();
