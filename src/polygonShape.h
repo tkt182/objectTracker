@@ -17,6 +17,9 @@ public:
 	void draw();
 
 	ofVec3f getCurrentPos();         // Œ»İ‚ÌÀ•W‚ğæ“¾‚·‚é
+	ofVec3f getDistination();        // ˆÚ“®–Ú•W‚ÌÀ•W‚ğæ“¾‚·‚é
+	float   getStepCounter();
+	float   getMoveStep();
 
 private:
 

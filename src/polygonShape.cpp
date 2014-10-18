@@ -19,8 +19,8 @@ void PolygonShape::setup(){
 		ofRandom(-1.0, 1.0)
 	).normalize();
 
-	_distance     = ofRandom(1.0, 10.0);
-	_velocitySize = ofRandom(1.0, 10.0);
+	_distance     = ofRandom(1.0, 5.0);
+	_velocitySize = ofRandom(1.0, 5.0);
 	_frictionSize = 10.0;
 	_angle        = 0.0;
 
@@ -70,11 +70,7 @@ void PolygonShape::update(){
 	_pathLines.addVertex(_currentPos);
 	_vbo.setMesh(_pathLines, GL_DYNAMIC_DRAW);
 
-	/*
-	std::cout << "X : " << _currentPos.x << std::endl;
-	std::cout << "Y : " << _currentPos.y << std::endl;
-	std::cout << "Z : " << _currentPos.z << std::endl;
-	*/
+
 
 }
 
@@ -89,7 +85,7 @@ void PolygonShape::draw(){
 		_material.begin();
 
 		ofSetSphereResolution(4);
-		ofDrawSphere(_currentPos, 20.0);
+		ofDrawSphere(_currentPos, 5.0);
 
 		_material.end();
 	
@@ -116,7 +112,7 @@ void PolygonShape::updateMoveDir(){
 
 void PolygonShape::updateDistination(){
 
-	_distance    = ofRandom(30.0, 300.0);
+	_distance    = ofRandom(20.0, 50.0);
 	_distination = _moveDir.getScaled(_distance);
 	
 
@@ -154,9 +150,6 @@ void PolygonShape::updateCurrentPos(){
 	ofVec3f diff     = _distination - _currentPos;
 	float   diffSize = diff.length();
 
-	//std::cout << "DIFF SIZE : " << hoge << std::endl;
-	//std::cout << "DIST X : " << _distination.x << std::endl;
-	//std::cout << "CURR X : " << _currentPos.x  << std::endl;
 
 
 	if(diffSize >= 10.0){
@@ -179,5 +172,22 @@ void PolygonShape::updateAngle(){
 ofVec3f PolygonShape::getCurrentPos(){
 
 	return _currentPos;
+
+}
+
+ofVec3f PolygonShape::getDistination(){
+
+	return _distination;
+
+}
+
+float PolygonShape::getStepCounter(){
+
+	return _stepCounter;
+}
+
+float PolygonShape::getMoveStep(){
+
+	return _moveStep;
 
 }
