@@ -166,14 +166,15 @@ void App::exit(){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
 
-	if(key == 'a'){
-		_ccam.updateDistance(50.0);
-	}
-
-	if(key == 's'){
+	// ↑キー
+	if(key == 357){
 		_ccam.updateDistance(-50.0);
 	}	
 
+	// ↓キー
+	if(key == 359){
+		_ccam.updateDistance(50.0);
+	}
 
 }
 

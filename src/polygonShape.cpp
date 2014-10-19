@@ -96,7 +96,7 @@ void PolygonShape::draw(){
 		
 		_material.begin();
 
-		ofSetSphereResolution(4);
+		ofSetSphereResolution(3);
 		ofDrawSphere(_currentPos, 5.0);
 
 		_material.end();
