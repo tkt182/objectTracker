@@ -27,7 +27,7 @@ void PolygonShape::setup(){
 
 	// 経過時間を掛けて使うので、大きめの値を設定する
 	// ※ 1フレームの描画にかかる経過時間(秒)は小さいため。
-	_frictionSize = 25;
+	_frictionSize = 23;
 	_angle        = 0.0;
 
 	_actionFrame  = 0;
@@ -122,11 +122,57 @@ void PolygonShape::updateTimeStep(){
 
 void PolygonShape::setMoveDir(){
 
-	_moveDir = ofVec3f(
-		ofRandom(-1.0, 1.0),
-		ofRandom(-1.0, 1.0),
-		ofRandom(-1.0, 1.0)
-	).normalize();
+	// どの軸の方向に動くかを決定
+	// 0 : X軸方向(+)
+	// 1 : X軸方向(-)
+	// 2 : Y軸方向(+)
+	// 3 : Y軸方向(-)
+	// 4 : Z軸方向(+)
+	// 5 : Z軸方向(-)
+	int dir = static_cast<int>(ofRandom(0, 5));
+
+
+	switch(dir){
+	
+		case 0:
+			_moveDir =
+				ofVec3f(ofRandom(10.0, 100.0), ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0)).normalize();
+			break;
+
+		case 1:
+			_moveDir =
+				ofVec3f(ofRandom(-10.0, -100.0), ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0)).normalize();			
+			break;
+
+		case 2:
+			_moveDir =
+				ofVec3f(ofRandom(-1.0, 1.0), ofRandom(10.0, 100.0), ofRandom(-1.0, 1.0)).normalize();
+			break;
+
+		case 3:
+			_moveDir =
+				ofVec3f(ofRandom(-1.0, 1.0), ofRandom(-10.0, -100.0), ofRandom(-1.0, 1.0)).normalize();
+			break;
+
+		case 4:
+			_moveDir =
+				ofVec3f(ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0), ofRandom(10.0, 100.0)).normalize();
+			break;
+
+		case 5:
+			_moveDir =
+				ofVec3f(ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0), ofRandom(-10.0, -100.0)).normalize();
+			break;
+
+
+		default:
+
+			_moveDir =
+				ofVec3f(ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0)).normalize();
+			break;
+		
+	}
+
 	
 }
 
