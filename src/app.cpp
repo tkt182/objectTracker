@@ -13,6 +13,11 @@ App::App(){
 * デストラクタ
 */
 App::~App(){
+
+	delete _polygonShape;
+	delete _stars;
+
+
 }
 
 
@@ -154,9 +159,6 @@ void App::draw(){
 
 void App::exit(){
 
-	delete _polygonShape;
-	delete _stars;
-	
 }
 
 

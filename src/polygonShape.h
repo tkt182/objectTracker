@@ -17,32 +17,26 @@ public:
 	void draw();
 
 	ofVec3f getCurrentPos();         // 現在の座標を取得する
-	ofVec3f getDistination();        // 移動目標の座標を取得する
-	float   getStepCounter();
-	float   getMoveStep();
 
 private:
 
 	ofVec3f        _currentPos;      // 中心座標
-	ofVec3f        _distination;     // 移動目標となる座標
 	ofVec3f        _moveDir;         // オブジェクトの進行方向
 	ofVec3f        _velocity;        // 速度ベクトル
-	ofVec3f        _friction;        // 摩擦ベクトル
+	ofVec3f        _friction;        // 摩擦(もどき)として働く速度ベクトル
 
-
-	float          _distance;         
+	float          _prevTime, _currentTime, _timeDiff;
 	float          _velocitySize;    // 移動する速度(スカラー値)
-	float          _frictionSize;    // 摩擦の大きさ(スカラー値)
-	float          _angle;
+	float          _frictionSize;    // 摩擦(もどき)の大きさ(スカラー値)
+	float          _angle;           // オブジェクトの時点角度
+
 
 	deque<ofVec3f> _pathVertices;    // 移動履歴の頂点情報
 	ofMesh         _pathLines;       // 移動履歴のメッシュ
 	ofVbo          _vbo;
 
-	int            _moveStep;        // 目標位置に到達するまでのステップ(描画回数)
-	int            _stepCounter;
-	int            _actionFrame;     // 次に中心座標を変更するフレーム 
-	int            _frameCounter;
+	int            _actionFrame;     // 次に速度ベクトルを変更するフレーム
+	int            _frameCount;      // フレーム数のカウント
 
 
 	ofFloatColor   _ambient;
@@ -53,10 +47,10 @@ private:
 	ofMaterial     _material;        // オブジェクトのマテリアル
 
 
-	void updateMoveDir();
-	void updateDistination();
-	void updateVelocity();
-	void updateFriction();
+	void updateTimeStep();
+	void setMoveDir();
+	void setVelocity();
+	void setFriction();
 	void updateCurrentPos();
 	void updateAngle();
 

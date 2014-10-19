@@ -13,7 +13,7 @@ class App : public ofBaseApp{
 	public:
 
 		App();
-		~App();
+		virtual ~App();
 
 		void setup();
 		void update();
