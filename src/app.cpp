@@ -13,6 +13,11 @@ App::App(){
 * デストラクタ
 */
 App::~App(){
+
+	delete _polygonShape;
+	delete _stars;
+
+
 }
 
 
@@ -36,9 +41,22 @@ void App::setup(){
 
 	_dampen = 0.4;
 
+	// メインオブジェクトの設定
 	_polygonShape = new PolygonShape();
 	_polygonShape->setup();
 
+
+	// カメラ関連の設定
+	_moveStep       = 15;  // 設定によっては、目標位置まで到達しない場合もある
+	_waitFrameNum   = 10;
+	_frameCounter   = 0;
+
+	_camPos         = _polygonShape->getCurrentPos();
+	_camDistination = _polygonShape->getCurrentPos();
+	_camVelocity    = (_camDistination - _camPos) / _moveStep; 
+
+
+	// 背景オブジェクトの設定
 	_stars = new Stars(2000);
 	_stars->setup();
 
@@ -51,23 +69,39 @@ void App::update(){
 	_polygonShape->update();
 
 
+	// 指定されたフレーム数ごとにカメラの移動ベクトルを変更する
+	if(_frameCounter == _waitFrameNum){
+
+		_camDistination = _polygonShape->getCurrentPos();
+		_camVelocity = (_camDistination - _camPos) * 0.1;
+
+		_frameCounter = 0;
+	
+	}
+
+
 }
 
 //--------------------------------------------------------------
 void App::draw(){
 
 
+	_camPos += _camVelocity;
 
-	ofVec3f targetPos = _polygonShape->getCurrentPos();
-	ofVec3f lightPos  = targetPos + 10.0;
+
+	ofVec3f lightPos  = _camPos + 10.0;
 
 	_ccam.begin();
 
+
 	/////// カメラ関連の設定 ///////
 
-	// カメラの基本位置と注視点を決定
-	_ccam.setCamPos(targetPos);
-	_ccam.setTargetPos(targetPos);
+	// カメラの基本位置と注視点を決定.
+	// ある程度オブジェクトを中心からずらすため、
+	// 注視点はオブジェクトの位置ではなく、カメラの位置となる.
+	// ※ 最終的には、カメラ位置を注視店からy軸方向に平行移動させる
+	_ccam.setCamPos(_camPos);
+	_ccam.setTargetPos(_camPos);
 	
 
 	// マウス操作による回転の座標変換をカメラに加える
@@ -117,13 +151,14 @@ void App::draw(){
 
 	_ccam.end();
 
+
+	_frameCounter++;
+
 }
+
 
 void App::exit(){
 
-	delete _polygonShape;
-	delete _stars;
-	
 }
 
 
@@ -131,14 +166,15 @@ void App::exit(){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
 
-	if(key == 'a'){
-		_ccam.updateDistance(50.0);
-	}
-
-	if(key == 's'){
+	// ↑キー
+	if(key == 357){
 		_ccam.updateDistance(-50.0);
 	}	
 
+	// ↓キー
+	if(key == 359){
+		_ccam.updateDistance(50.0);
+	}
 
 }
 

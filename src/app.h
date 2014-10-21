@@ -13,7 +13,7 @@ class App : public ofBaseApp{
 	public:
 
 		App();
-		~App();
+		virtual ~App();
 
 		void setup();
 		void update();
@@ -32,6 +32,14 @@ class App : public ofBaseApp{
 
 	private:
 	
+		ofVec3f _camPos;                // 現在のカメラ位置
+		ofVec3f _camDistination;        // カメラの移動目標(オブジェクトの位置)
+		ofVec3f _camVelocity;           // カメラの速度ベクトル
+
+		float   _waitFrameNum;          // カメラの速度ベクトルを変更するフレーム間隔
+		float   _moveStep;              // カメラが目標位置まで移動するのに必要なステップ(フレーム)数
+		float   _frameCounter;          // フレーム数のカウンター
+
 
 		//a place to store the mouse position so we can measure incremental change  
 		ofVec2f _lastMouse;
