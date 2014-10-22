@@ -94,6 +94,7 @@
     <ClCompile Include="src\customCam.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\polygonShape.cpp" />
+    <ClCompile Include="src\polygonShapeSound.cpp" />
     <ClCompile Include="src\stars.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +111,7 @@
     <ClInclude Include="src\app.h" />
     <ClInclude Include="src\customCam.h" />
     <ClInclude Include="src\polygonShape.h" />
+    <ClInclude Include="src\polygonShapeSound.h" />
     <ClInclude Include="src\stars.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

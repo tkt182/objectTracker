@@ -16,6 +16,9 @@
     <ClCompile Include="src\polygonShape.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\polygonShapeSound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -36,6 +39,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\polygonShape.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\polygonShapeSound.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

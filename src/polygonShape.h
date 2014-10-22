@@ -5,6 +5,7 @@
 #include <deque>
 #include "ofMain.h"
 
+
 class PolygonShape{
 
 public:
@@ -12,13 +13,15 @@ public:
 	PolygonShape();
 	virtual ~PolygonShape();
 
-	void setup();
-	void update();
-	void draw();
+	virtual void setup();
+	virtual void update();
+	virtual void draw();
 
 	ofVec3f getCurrentPos();         // 現在の座標を取得する
+	
 
-private:
+
+protected:
 
 	ofVec3f        _currentPos;      // 中心座標
 	ofVec3f        _moveDir;         // オブジェクトの進行方向
@@ -26,17 +29,18 @@ private:
 	ofVec3f        _friction;        // 摩擦(もどき)として働く速度ベクトル
 
 	float          _prevTime, _currentTime, _timeDiff;
-	float          _velocitySize;    // 移動する速度(スカラー値)
-	float          _frictionSize;    // 摩擦(もどき)の大きさ(スカラー値)
-	float          _angle;           // オブジェクトの時点角度
+	float          _velocitySize;       // 速さ(スカラー値)
+	float          _velocitySizeLimit;  // 速さのリミット
+	float          _frictionSize;       // 摩擦(もどき)の大きさ(スカラー値)
+	float          _angle;              // オブジェクトの時点角度
 
 
-	deque<ofVec3f> _pathVertices;    // 移動履歴の頂点情報
-	ofMesh         _pathLines;       // 移動履歴のメッシュ
+	deque<ofVec3f> _pathVertices;       // 移動履歴の頂点情報
+	ofMesh         _pathLines;          // 移動履歴のメッシュ
 	ofVbo          _vbo;
 
-	int            _actionFrame;     // 次に速度ベクトルを変更するフレーム
-	int            _frameCount;      // フレーム数のカウント
+	int            _actionFrame;        // 次に速度ベクトルを変更するフレーム
+	int            _frameCount;         // フレーム数のカウント
 
 
 	ofFloatColor   _ambient;
@@ -46,15 +50,14 @@ private:
 
 	ofMaterial     _material;        // オブジェクトのマテリアル
 
-
+	
 	void updateTimeStep();
 	void setMoveDir();
-	void setVelocity();
 	void setFriction();
 	void updateCurrentPos();
 	void updateAngle();
 
-
+	virtual void setVelocity();
 	
 
 };

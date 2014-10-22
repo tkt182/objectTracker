@@ -1,10 +1,20 @@
 #include <vector>
 #include <deque>
+#include <cstdio>
+#include <ctime>
+
 #include "ofMain.h"
 #include "customCam.h"
 #include "polygonShape.h"
+#include "polygonShapeSound.h"
 #include "stars.h"
 
+
+//#define SOUND_DEVICE_ENABLE
+
+#ifdef  SOUND_DEVICE_ENABLE
+#define BUFFER_SIZE 256
+#endif
 
 
 class App : public ofBaseApp{
@@ -47,15 +57,26 @@ class App : public ofBaseApp{
 		// slows down the rotation 1 = 1 degree per pixel
 		float _dampen;
 
-		// カメラ
-		CustomCam _ccam;
 
-		// ライト
-		ofLight   _light;
+		CustomCam _ccam;                // カメラ
+		ofLight   _light;               // ライト
 
-		// ターゲットオブジェクト
-		PolygonShape* _polygonShape;
 
+#ifdef SOUND_DEVICE_ENABLE
+
+		ofSoundStream      _soundStream;
+		float*             _left;
+		float              _maxPower;
+		void audioIn(float* input, int bufferSize, int nChannels);
+
+		PolygonShapeSound* _polygonShape;    // ターゲットオブジェクト(オーディオ入力あり)
+
+
+#else
+
+		PolygonShape* _polygonShape;         // ターゲットオブジェクト
+
+#endif
 		// 背景に表示する球
 		Stars* _stars;
 
