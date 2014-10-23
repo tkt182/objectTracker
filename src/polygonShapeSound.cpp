@@ -10,9 +10,16 @@ void PolygonShapeSound::setup(){
 
 
 	_prevTime = ofGetElapsedTimef();
+	_vboIndex = 0;
 
-	_currentPos = ofVec3f(0.0, 0.0, 0.0);
-	_pathLines.addVertex(_currentPos);
+	// _pathLines‚Ì‰Šú‰»
+	ofMesh mesh;
+	_pathLines.push_back(mesh);
+	_pathLines[_vboIndex].addVertex(_currentPos);
+
+	// _vbos‚Ì‰Šú‰»
+	ofVbo vbo;
+	_vbos.push_back(vbo);
 
 
 	_moveDir = ofVec3f(
@@ -65,9 +72,10 @@ void PolygonShapeSound::update(){
 	this->updateCurrentPos();
 	this->updateAngle();
 
-	_pathLines.addVertex(_currentPos);
-	_vbo.setMesh(_pathLines, GL_DYNAMIC_DRAW);
-
+	// ––”ö‚Ì—v‘f‚É’¸“_î•ñ‚ğ’Ç‰Á‚·‚é
+	_pathLines[_vboIndex].addVertex(_currentPos);
+	
+	_vbos[_vboIndex].setMesh(_pathLines[_vboIndex], GL_DYNAMIC_DRAW);
 
 }
 

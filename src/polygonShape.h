@@ -2,6 +2,7 @@
 #define __POLYGON_SHAPE_H_
 
 #include <iostream>
+#include <vector>
 #include <deque>
 #include "ofMain.h"
 
@@ -18,15 +19,15 @@ public:
 	virtual void draw();
 
 	ofVec3f getCurrentPos();         // 現在の座標を取得する
-	
+	void    resetCurrentPos();
 
 
 protected:
 
-	ofVec3f        _currentPos;      // 中心座標
-	ofVec3f        _moveDir;         // オブジェクトの進行方向
-	ofVec3f        _velocity;        // 速度ベクトル
-	ofVec3f        _friction;        // 摩擦(もどき)として働く速度ベクトル
+	ofVec3f        _currentPos;         // 中心座標
+	ofVec3f        _moveDir;            // オブジェクトの進行方向
+	ofVec3f        _velocity;           // 速度ベクトル
+	ofVec3f        _friction;           // 摩擦(もどき)として働く速度ベクトル
 
 	float          _prevTime, _currentTime, _timeDiff;
 	float          _velocitySize;       // 速さ(スカラー値)
@@ -35,12 +36,12 @@ protected:
 	float          _angle;              // オブジェクトの時点角度
 
 
-	deque<ofVec3f> _pathVertices;       // 移動履歴の頂点情報
-	ofMesh         _pathLines;          // 移動履歴のメッシュ
-	ofVbo          _vbo;
+	int                 _vboIndex;      // 中心座標のリセット毎に追加するvboのインデックス
+	std::vector<ofMesh> _pathLines;     // 移動履歴の頂点情報
+	std::vector<ofVbo> _vbos;
 
-	int            _actionFrame;        // 次に速度ベクトルを変更するフレーム
-	int            _frameCount;         // フレーム数のカウント
+	int                _actionFrame;    // 次に速度ベクトルを変更するフレーム
+	int                _frameCount;     // フレーム数のカウント
 
 
 	ofFloatColor   _ambient;
@@ -48,7 +49,7 @@ protected:
 	ofFloatColor   _specular;
 	float          _shininess;
 
-	ofMaterial     _material;        // オブジェクトのマテリアル
+	ofMaterial     _material;           // オブジェクトのマテリアル
 
 	
 	void updateTimeStep();
@@ -56,6 +57,7 @@ protected:
 	void setFriction();
 	void updateCurrentPos();
 	void updateAngle();
+
 
 	virtual void setVelocity();
 	
