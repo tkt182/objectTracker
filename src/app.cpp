@@ -41,10 +41,27 @@ void App::setup(){
 
 	_dampen = 0.4;
 
+#ifdef SOUND_DEVICE_ENABLE
+
+	_soundStream.listDevices();
+	//_soundStream.setDeviceID(1);
+	_soundStream.setup(this, 0, 2, 44100, BUFFER_SIZE, 4);
+
+	_left     = new float[BUFFER_SIZE];
+	_maxPower = 0.0;
+
+
+	// メインオブジェクトの設定
+	_polygonShape = new PolygonShapeSound();
+	_polygonShape->setup();
+
+#else
+
 	// メインオブジェクトの設定
 	_polygonShape = new PolygonShape();
 	_polygonShape->setup();
 
+#endif
 
 	// カメラ関連の設定
 	_moveStep       = 15;  // 設定によっては、目標位置まで到達しない場合もある
@@ -65,6 +82,10 @@ void App::setup(){
 
 //--------------------------------------------------------------
 void App::update(){
+
+#ifdef SOUND_DEVICE_ENABLE
+	_polygonShape->setPower(_maxPower);
+#endif
 
 	_polygonShape->update();
 
@@ -159,7 +180,32 @@ void App::draw(){
 
 void App::exit(){
 
+#ifdef SOUND_DEVICE_ENABLE
+	_soundStream.close();
+	delete[] _left;
+#endif
+
 }
+
+#ifdef SOUND_DEVICE_ENABLE
+
+void App::audioIn(float* input, int bufferSize, int nChannels){
+
+	// ユーザが指定したバッファと、実際にドライバが確保するバッファのサイズを
+	// 比較し、小さい方を採用する.もし大きい値を使うと、SoundStreamを閉じる際にエラーが発生する
+	int minBufferSize = min(BUFFER_SIZE, bufferSize);
+
+	_maxPower = 0.0;
+
+	for(int i = 0; i < minBufferSize; i++){
+		
+		_left[i] = input[i * 2];
+		if(_left[i] > _maxPower) _maxPower = _left[i];
+
+	}
+
+}
+#endif
 
 
 

@@ -23,15 +23,16 @@ void PolygonShape::setup(){
 		ofRandom(-1.0, 1.0)
 	).normalize();
 
-	_velocitySize = ofRandom(1.0, 5.0);
 
 	// 経過時間を掛けて使うので、大きめの値を設定する
 	// ※ 1フレームの描画にかかる経過時間(秒)は小さいため。
-	_frictionSize = 23;
+	_frictionSize = 23.0;
+	_velocitySize = ofRandom(1.0, 5.0);
+
 	_angle        = 0.0;
 
 	_actionFrame  = 0;
-	_frameCount = 0;
+	_frameCount   = 0;
 
 
 	this->setMoveDir();
@@ -57,7 +58,6 @@ void PolygonShape::setup(){
 
 void PolygonShape::update(){
 
-
 	this->updateTimeStep();
 
 	if(_frameCount > _actionFrame){
@@ -68,13 +68,13 @@ void PolygonShape::update(){
 
 		_actionFrame  = static_cast<int>(ofRandom(10, 30));
 		_frameCount = 0;
-
 	
 	}else{
 
 		_frameCount++;
 	
 	}
+
 
 	this->updateCurrentPos();
 	this->updateAngle();
@@ -85,7 +85,6 @@ void PolygonShape::update(){
 
 
 }
-
 
 
 void PolygonShape::draw(){
@@ -122,6 +121,7 @@ void PolygonShape::updateTimeStep(){
 
 void PolygonShape::setMoveDir(){
 
+
 	// どの軸の方向に動くかを決定
 	// 0 : X軸方向(+)
 	// 1 : X軸方向(-)
@@ -129,7 +129,9 @@ void PolygonShape::setMoveDir(){
 	// 3 : Y軸方向(-)
 	// 4 : Z軸方向(+)
 	// 5 : Z軸方向(-)
-	int dir = static_cast<int>(ofRandom(0, 5));
+	// ofRandomはfloat方の値が帰ってくるため、rand関数を使用する
+	srand(static_cast<unsigned int>(time(NULL)));
+	int dir = rand() % 6;
 
 
 	switch(dir){
@@ -182,6 +184,7 @@ void PolygonShape::setVelocity(){
 	_velocitySize = ofRandom(5.0, 10.0);
 	_velocity     = _moveDir.getScaled(_velocitySize);
 
+	//std::cout << _velocitySize << std::endl;
 }
 
 void PolygonShape::setFriction(){
