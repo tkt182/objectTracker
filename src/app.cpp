@@ -214,12 +214,16 @@ void App::keyPressed(int key){
 
 	// ↑キー
 	if(key == 357){
-		_ccam.updateDistance(-50.0);
+		_ccam.updateDistance(-20.0);
 	}	
 
 	// ↓キー
 	if(key == 359){
-		_ccam.updateDistance(50.0);
+		_ccam.updateDistance(20.0);
+	}
+
+	if(key == 'r'){
+		_polygonShape->resetCurrentPos();
 	}
 
 }

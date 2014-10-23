@@ -12,9 +12,18 @@ void PolygonShape::setup(){
 
 
 	_prevTime = ofGetElapsedTimef();
+	_vboIndex = 0;
 
 	_currentPos = ofVec3f(0.0, 0.0, 0.0);
-	_pathLines.addVertex(_currentPos);
+
+	// _pathLinesの初期化
+	ofMesh mesh;
+	_pathLines.push_back(mesh);
+	_pathLines[_vboIndex].addVertex(_currentPos);
+
+	// _vbosの初期化
+	ofVbo vbo;
+	_vbos.push_back(vbo);
 
 
 	_moveDir = ofVec3f(
@@ -33,6 +42,8 @@ void PolygonShape::setup(){
 
 	_actionFrame  = 0;
 	_frameCount   = 0;
+
+
 
 
 	this->setMoveDir();
@@ -79,8 +90,11 @@ void PolygonShape::update(){
 	this->updateCurrentPos();
 	this->updateAngle();
 
-	_pathLines.addVertex(_currentPos);
-	_vbo.setMesh(_pathLines, GL_DYNAMIC_DRAW);
+
+	// 末尾の要素に頂点情報を追加する
+	_pathLines[_vboIndex].addVertex(_currentPos);
+	
+	_vbos[_vboIndex].setMesh(_pathLines[_vboIndex], GL_DYNAMIC_DRAW);
 
 
 
@@ -104,8 +118,10 @@ void PolygonShape::draw(){
 	ofPopMatrix();
 
 	ofSetLineWidth(1.0);
-	_vbo.draw(GL_LINE_STRIP, 0, _pathLines.getNumVertices());
 
+	for(int i = 0; i < _pathLines.size(); i++){
+		_vbos[i].draw(GL_LINE_STRIP, 0, _pathLines[i].getNumVertices());
+	}
 
 }
 
@@ -221,5 +237,22 @@ void PolygonShape::updateAngle(){
 ofVec3f PolygonShape::getCurrentPos(){
 
 	return _currentPos;
+
+}
+
+void PolygonShape::resetCurrentPos(){
+
+
+	// オブジェクトを初期位置に戻す
+	_currentPos = ofVec3f(0.0, 0.0, 0.0);
+
+	// 新たなmesh、vboを追加する
+	ofMesh mesh;
+	_vboIndex++;
+	_pathLines.push_back(mesh);
+	_pathLines[_vboIndex].addVertex(_currentPos);
+
+	ofVbo vbo;
+	_vbos.push_back(vbo);
 
 }
