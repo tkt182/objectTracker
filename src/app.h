@@ -46,6 +46,11 @@ class App : public ofBaseApp{
 		ofVec3f _camDistination;        // カメラの移動目標(オブジェクトの位置)
 		ofVec3f _camVelocity;           // カメラの速度ベクトル
 
+
+		bool    _camMoveEnable;         // カメラの位置を動かすか、位置を固定するかのフラグ
+		ofVec3f _baseCamPos;            // カメラ固定時の位置
+
+
 		float   _waitFrameNum;          // カメラの速度ベクトルを変更するフレーム間隔
 		float   _moveStep;              // カメラが目標位置まで移動するのに必要なステップ(フレーム)数
 		float   _frameCounter;          // フレーム数のカウンター
@@ -56,7 +61,6 @@ class App : public ofBaseApp{
 	
 		// slows down the rotation 1 = 1 degree per pixel
 		float _dampen;
-
 
 		CustomCam _ccam;                // カメラ
 		ofLight   _light;               // ライト

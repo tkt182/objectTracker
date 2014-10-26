@@ -160,7 +160,7 @@ void PolygonShape::setMoveDir(){
 
 		case 1:
 			_moveDir =
-				ofVec3f(ofRandom(5.0, 10.0), ofRandom(-0.5, 0.5), ofRandom(-0.5, 0.5)).normalize();
+				ofVec3f(ofRandom(-5.0, -10.0), ofRandom(-0.5, 0.5), ofRandom(-0.5, 0.5)).normalize();
 			break;
 
 		case 2:

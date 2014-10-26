@@ -86,10 +86,9 @@ void PolygonShapeSound::setPower(const float power){
 
 void PolygonShapeSound::setVelocity(){
 
-	_velocitySize = _power * 10.0;
+	_velocitySize = _power * 5.0;
 	_velocity     = _moveDir.getScaled(_velocitySize);
 
-	//std::cout << _velocitySize << std::endl;
 }
 
 

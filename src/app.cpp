@@ -65,12 +65,14 @@ void App::setup(){
 
 	// カメラ関連の設定
 	_moveStep       = 15;  // 設定によっては、目標位置まで到達しない場合もある
-	_waitFrameNum   = 10;
+	_waitFrameNum   = 3;
 	_frameCounter   = 0;
+	_camMoveEnable  = true;
 
 	_camPos         = _polygonShape->getCurrentPos();
 	_camDistination = _polygonShape->getCurrentPos();
-	_camVelocity    = (_camDistination - _camPos) / _moveStep; 
+	_camVelocity    = (_camDistination - _camPos) / _moveStep;
+	_baseCamPos     = _camPos;
 
 
 	// 背景オブジェクトの設定
@@ -109,7 +111,6 @@ void App::draw(){
 
 	_camPos += _camVelocity;
 
-
 	ofVec3f lightPos  = _camPos + 10.0;
 
 	_ccam.begin();
@@ -117,17 +118,26 @@ void App::draw(){
 
 	/////// カメラ関連の設定 ///////
 
-	// カメラの基本位置と注視点を決定.
-	// ある程度オブジェクトを中心からずらすため、
-	// 注視点はオブジェクトの位置ではなく、カメラの位置となる.
-	// ※ 最終的には、カメラ位置を注視店からy軸方向に平行移動させる
-	_ccam.setCamPos(_camPos);
-	_ccam.setTargetPos(_camPos);
+
+	if(_camMoveEnable){
+
+		// カメラの基本位置と注視点を決定.
+		// ある程度オブジェクトを中心からずらすため、
+		// 注視点はオブジェクトの位置ではなく、カメラの位置となる.
+		// ※ 最終的には、カメラ位置を注視店からy軸方向に平行移動させる
+		_ccam.setCamPos(_camPos);
+		_ccam.setTargetPos(_camPos);
 	
+	}else{
+	
+		_ccam.setCamPos(_baseCamPos);
+		_ccam.setTargetPos(_camPos);
+	
+	}
 
 	// マウス操作による回転の座標変換をカメラに加える
 	_ccam.execRotate();
-
+		
 	// 座標変換されたカメラの位置を、オブジェクトから一定の距離を保てる位置に変更する
 	_ccam.keepADistance();
 
@@ -213,17 +223,26 @@ void App::audioIn(float* input, int bufferSize, int nChannels){
 void App::keyPressed(int key){
 
 	// ↑キー
+	// カメラとオブジェクトの距離を近づける(-の場合は遠ざける)
 	if(key == 357){
 		_ccam.updateDistance(-20.0);
 	}	
 
 	// ↓キー
+	// カメラとオブジェクトの距離を遠ざける(-の場合は近づける)
 	if(key == 359){
 		_ccam.updateDistance(20.0);
 	}
 
+	// オブジェクトの位置をデフォルトに戻す
 	if(key == 'r'){
 		_polygonShape->resetCurrentPos();
+	}
+
+	// カメラをオブジェクトに沿って動かすかどうかを決める
+	if(key == 'm'){
+		_camMoveEnable = !_camMoveEnable;
+		_baseCamPos = _camPos;
 	}
 
 }
