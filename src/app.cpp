@@ -64,15 +64,16 @@ void App::setup(){
 #endif
 
 	// カメラ関連の設定
-	_moveStep       = 15;  // 設定によっては、目標位置まで到達しない場合もある
 	_waitFrameNum   = 3;
 	_frameCounter   = 0;
 	_camMoveEnable  = true;
 
-	_camPos         = _polygonShape->getCurrentPos();
-	_camDistination = _polygonShape->getCurrentPos();
-	_camVelocity    = (_camDistination - _camPos) / _moveStep;
-	_baseCamPos     = _camPos;
+
+	_targetPos      = _polygonShape->getCurrentPos();
+	_camBasePos     = _targetPos;
+	_camDistination = _targetPos;
+	_camVelocity    = (_camDistination - _camBasePos);
+	_camStayPos     = _camBasePos;
 
 
 	// 背景オブジェクトの設定
@@ -90,13 +91,13 @@ void App::update(){
 #endif
 
 	_polygonShape->update();
-
+	_targetPos = _polygonShape->getCurrentPos();
 
 	// 指定されたフレーム数ごとにカメラの移動ベクトルを変更する
 	if(_frameCounter == _waitFrameNum){
 
-		_camDistination = _polygonShape->getCurrentPos();
-		_camVelocity = (_camDistination - _camPos) * 0.1;
+		_camDistination = _targetPos;
+		_camVelocity    = (_camDistination - _camBasePos) * 0.1;
 
 		_frameCounter = 0;
 	
@@ -108,31 +109,37 @@ void App::update(){
 //--------------------------------------------------------------
 void App::draw(){
 
+	ofVec3f lightPos  = _targetPos + 10.0;
 
-	_camPos += _camVelocity;
-
-	ofVec3f lightPos  = _camPos + 10.0;
+	_camBasePos += _camVelocity;
 
 	_ccam.begin();
 
 
 	/////// カメラ関連の設定 ///////
 
-
 	if(_camMoveEnable){
 
-		// カメラの基本位置と注視点を決定.
+		/////// カメラをオブジェクトに沿って動かす場合 ///////
+
+		// カメラの基本位置と注視点を決定。
 		// ある程度オブジェクトを中心からずらすため、
-		// 注視点はオブジェクトの位置ではなく、カメラの位置となる.
-		// ※ 最終的には、カメラ位置を注視店からy軸方向に平行移動させる
-		_ccam.setCamPos(_camPos);
-		_ccam.setTargetPos(_camPos);
-	
+		// 注視点はオブジェクトそのものの位置ではなく、カメラの基本位置となる。
+		// ※ 最終的には、カメラ位置を注視店からy軸方向に平行移動させる。
+		_ccam.setCamBasePos(_camBasePos);
+		_ccam.setTargetPos(_camBasePos);
+
 	}else{
-	
-		_ccam.setCamPos(_baseCamPos);
-		_ccam.setTargetPos(_camPos);
-	
+
+		/////// カメラの位置を固定し、オブジェクトの方向のみを向く場合 ///////
+
+		// カメラの基本位置を固定し、注視点を決定。
+		// 注視点はカメラを動かす場合と同様に、カメラの基本位置とする。
+		// ※ カメラの基本位置は_camVelocityを加える形で徐々に移動するため、
+		//    カメラの動きが滑らかになる
+		_ccam.setCamBasePos(_camStayPos);
+		_ccam.setTargetPos(_camBasePos);
+
 	}
 
 	// マウス操作による回転の座標変換をカメラに加える
@@ -242,7 +249,7 @@ void App::keyPressed(int key){
 	// カメラをオブジェクトに沿って動かすかどうかを決める
 	if(key == 'm'){
 		_camMoveEnable = !_camMoveEnable;
-		_baseCamPos = _camPos;
+		_camStayPos    = _camBasePos;
 	}
 
 }

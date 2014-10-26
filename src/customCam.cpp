@@ -25,9 +25,9 @@ CustomCam::~CustomCam(){
 /**
  * ƒJƒƒ‰‚ÌŠî–{ˆÊ’u‚ğŒˆ’è
  */
-void CustomCam::setCamPos(const ofVec3f camPos){
+void CustomCam::setCamBasePos(const ofVec3f camBasePos){
 
-	_pos = camPos;
+	_pos = camBasePos;
 }
 
 

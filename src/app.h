@@ -42,17 +42,18 @@ class App : public ofBaseApp{
 
 	private:
 	
-		ofVec3f _camPos;                // 現在のカメラ位置
+		ofVec3f _camBasePos;            // 現在のカメラの"基本"位置
 		ofVec3f _camDistination;        // カメラの移動目標(オブジェクトの位置)
 		ofVec3f _camVelocity;           // カメラの速度ベクトル
 
+		ofVec3f _targetPos;             // 現在のオブジェクトの位置
+
 
 		bool    _camMoveEnable;         // カメラの位置を動かすか、位置を固定するかのフラグ
-		ofVec3f _baseCamPos;            // カメラ固定時の位置
+		ofVec3f _camStayPos;            // カメラ固定時の位置
 
 
 		float   _waitFrameNum;          // カメラの速度ベクトルを変更するフレーム間隔
-		float   _moveStep;              // カメラが目標位置まで移動するのに必要なステップ(フレーム)数
 		float   _frameCounter;          // フレーム数のカウンター
 
 
