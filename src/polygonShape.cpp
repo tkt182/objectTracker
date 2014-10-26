@@ -35,8 +35,8 @@ void PolygonShape::setup(){
 
 	// 経過時間を掛けて使うので、大きめの値を設定する
 	// ※ 1フレームの描画にかかる経過時間(秒)は小さいため。
-	_frictionSize = 23.0;
-	_velocitySize = ofRandom(1.0, 5.0);
+	_frictionSize = 5.0;
+	_velocitySize = ofRandom(1.0, 2.0);
 
 	_angle        = 0.0;
 
@@ -74,10 +74,11 @@ void PolygonShape::update(){
 	if(_frameCount > _actionFrame){
 
 		this->setMoveDir();
-		this->setFriction();
 		this->setVelocity();
+		this->setFriction();
 
-		_actionFrame  = static_cast<int>(ofRandom(10, 30));
+
+		_actionFrame  = static_cast<int>(ofRandom(10, 40));
 		_frameCount = 0;
 	
 	}else{
@@ -154,32 +155,32 @@ void PolygonShape::setMoveDir(){
 	
 		case 0:
 			_moveDir =
-				ofVec3f(ofRandom(10.0, 100.0), ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0)).normalize();
+				ofVec3f(ofRandom(5.0, 10.0), ofRandom(-0.5, 0.5), ofRandom(-0.5, 0.5)).normalize();
 			break;
 
 		case 1:
 			_moveDir =
-				ofVec3f(ofRandom(-10.0, -100.0), ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0)).normalize();			
+				ofVec3f(ofRandom(5.0, 10.0), ofRandom(-0.5, 0.5), ofRandom(-0.5, 0.5)).normalize();
 			break;
 
 		case 2:
 			_moveDir =
-				ofVec3f(ofRandom(-1.0, 1.0), ofRandom(10.0, 100.0), ofRandom(-1.0, 1.0)).normalize();
+				ofVec3f(ofRandom(-0.5, 0.5), ofRandom(5.0, 10.0), ofRandom(-0.5, 0.5)).normalize();
 			break;
 
 		case 3:
 			_moveDir =
-				ofVec3f(ofRandom(-1.0, 1.0), ofRandom(-10.0, -100.0), ofRandom(-1.0, 1.0)).normalize();
+				ofVec3f(ofRandom(-0.5, 0.5), ofRandom(-5.0, -10.0), ofRandom(-0.5, 0.5)).normalize();
 			break;
 
 		case 4:
 			_moveDir =
-				ofVec3f(ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0), ofRandom(10.0, 100.0)).normalize();
+				ofVec3f(ofRandom(-0.5, 0.5), ofRandom(-0.5, 0.5), ofRandom(5.0, 10.0)).normalize();
 			break;
 
 		case 5:
 			_moveDir =
-				ofVec3f(ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0), ofRandom(-10.0, -100.0)).normalize();
+				ofVec3f(ofRandom(-0.5, 0.5), ofRandom(-0.5, 0.5), ofRandom(-5.0, -10.0)).normalize();
 			break;
 
 
@@ -197,10 +198,9 @@ void PolygonShape::setMoveDir(){
 
 void PolygonShape::setVelocity(){
 
-	_velocitySize = ofRandom(5.0, 10.0);
+	_velocitySize = ofRandom(1.0, 2.0);
 	_velocity     = _moveDir.getScaled(_velocitySize);
 
-	//std::cout << _velocitySize << std::endl;
 }
 
 void PolygonShape::setFriction(){
@@ -214,10 +214,9 @@ void PolygonShape::updateCurrentPos(){
 
 	_velocity += _friction * _timeDiff;
 
-
-	// 速度ベクトルの大きさが5.0以上の場合は、
+	// 速度ベクトルの大きさが1.0以上の場合は、
 	// まだオブジェクトが動いているとする
-	if(_velocity.length() > 5.0){
+	if(_velocity.length() > 1.0){
 		_currentPos += _velocity;
 	}
 	
