@@ -15,7 +15,7 @@ public:
 
 
 	// カメラの基本位置を決定
-	void setCamPos(const ofVec3f camPos);
+	void setCamBasePos(const ofVec3f camBasePos);
 	
 	// カメラの注視点を決定
 	void setTargetPos(const ofVec3f targetPos);
