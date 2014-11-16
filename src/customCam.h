@@ -38,6 +38,8 @@ public:
 	void setPosition();
 	void lookAt();
 
+	ofVec3f getPosition();
+
 
 	// ƒJƒƒ‰-’‹“_ŠÔ‚Ì‹——£‚ğ•ÏX‚·‚é
 	void updateDistance(const float moveDistance);

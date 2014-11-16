@@ -14,9 +14,12 @@ App::App(){
 */
 App::~App(){
 
-	delete _polygonShape;
+	delete[] _polygonShapes;
 	delete _stars;
 
+#ifdef SOUND_DEVICE_ENABLE
+	delete[] _left;
+#endif
 
 }
 
@@ -26,25 +29,36 @@ void App::setup(){
 
 	ofSetVerticalSync(true);
 	ofSetFrameRate(60);
-	ofEnableDepthTest();
+	
+
+	
+	// 透明オブジェクトにするため、DepthTestは有効にしない
+	//ofEnableDepthTest();
+	glBlendEquation(GL_FUNC_ADD);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+
 	ofSetSmoothLighting(false);
+
 	//ofSetFullscreen(true);
 	//ofHideCursor();
 
 	ofBackground(0, 0, 0);
 
-	_light.setDirectional();
-	_light.setAmbientColor(ofFloatColor(0.1, 0.4, 0.1, 1.0));
-	_light.setDiffuseColor(ofFloatColor(0.2, 0.7, 0.2, 1.0));
-	_light.setSpecularColor(ofFloatColor(0.2, 0.8, 0.2, 1.0));
+	_light.setPointLight();
+	_light.setAmbientColor(ofFloatColor(0.2, 0.2, 0.2, 1.0));
+	_light.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0, 1.0));
+	_light.setSpecularColor(ofFloatColor(0.4, 0.4, 0.4, 1.0));
 
 
-	_dampen = 0.4;
+	_objectNum    = 3;
+	_activeObject = 0;
+
 
 #ifdef SOUND_DEVICE_ENABLE
 
 	_soundStream.listDevices();
-	//_soundStream.setDeviceID(1);
+	_soundStream.setDeviceID(1);
 	_soundStream.setup(this, 0, 2, 44100, BUFFER_SIZE, 4);
 
 	_left     = new float[BUFFER_SIZE];
@@ -52,14 +66,25 @@ void App::setup(){
 
 
 	// メインオブジェクトの設定
-	_polygonShape = new PolygonShapeSound();
-	_polygonShape->setup();
+	_polygonShapes = new PolygonShapeSound[_objectNum];
+	for(int i = 0; i < _objectNum; i++){
+		new(_polygonShapes + i) PolygonShapeSound(i);
+		_polygonShapes[i].setup();
+	}
 
 #else
 
 	// メインオブジェクトの設定
-	_polygonShape = new PolygonShape();
-	_polygonShape->setup();
+	_polygonShapes = new PolygonShape[_objectNum];
+	for(int i = 0; i < _objectNum; i++){
+		new(_polygonShapes + i) PolygonShape(i);
+		_polygonShapes[i].setup();
+		
+		_lights.push_back(ofLight());
+	
+	}
+
+
 
 #endif
 
@@ -69,11 +94,13 @@ void App::setup(){
 	_camMoveEnable  = true;
 
 
-	_targetPos      = _polygonShape->getCurrentPos();
+	// デフォルトは0番目のオブジェクト
+	_targetPos      = _polygonShapes[_activeObject].getCurrentPos();
 	_camBasePos     = _targetPos;
 	_camDistination = _targetPos;
-	_camVelocity    = (_camDistination - _camBasePos);
+	_camVelocity    = _camBasePos;
 	_camStayPos     = _camBasePos;
+
 
 
 	// 背景オブジェクトの設定
@@ -81,17 +108,28 @@ void App::setup(){
 	_stars->setup();
 
 
+	// マウスドラッグ時の移動距離調整パラメータ
+	_dampen = 0.4;
+
 }
 
 //--------------------------------------------------------------
 void App::update(){
 
 #ifdef SOUND_DEVICE_ENABLE
-	_polygonShape->setPower(_maxPower);
+
+	for(int i = 0; i < _objectNum; i++){
+		_polygonShapes[i].setPower(_maxPower);
+	}
+
 #endif
 
-	_polygonShape->update();
-	_targetPos = _polygonShape->getCurrentPos();
+	for(int i = 0; i < _objectNum; i++){
+		_polygonShapes[i].update();
+	}
+
+	_targetPos = _polygonShapes[_activeObject].getCurrentPos();
+
 
 	// 指定されたフレーム数ごとにカメラの移動ベクトルを変更する
 	if(_frameCounter == _waitFrameNum){
@@ -104,12 +142,15 @@ void App::update(){
 	}
 
 
+
+
+
 }
 
 //--------------------------------------------------------------
 void App::draw(){
 
-	ofVec3f lightPos  = _targetPos + 10.0;
+
 
 	_camBasePos += _camVelocity;
 
@@ -157,6 +198,14 @@ void App::draw(){
 	_ccam.setPosition();
 	_ccam.lookAt();
 
+	// ライトの位置をカメラの位置と同じにする
+	ofVec3f lightPos = _ccam.getPosition();
+	_light.setPosition(lightPos);
+
+
+	// ライトを有効にした時点で、位置が更新される
+	// ※ 回転行列をかける前に有効にする必要がある
+	_light.enable();
 
 
 	/////// 表示するオブジェクトの設定・描画 ///////
@@ -166,31 +215,35 @@ void App::draw(){
 	ofVec3f axis;
 	_ccam.getRotation(angle, axis);
 
+
 	ofRotate(angle, axis.x, axis.y, axis.z);
 	
+
+
 	
 	ofPushMatrix();
 	{
 
 		_stars->draw();
 
-		_light.enable();
-		_light.setPosition(lightPos);
-		//_light.setSpotlight();
+		// LightをONにするとGL_COLOR_MATERIALが有効になるようだ.
+		// 0.8.0のバグ??
+		glDisable(GL_COLOR_MATERIAL);
 
+		for(int i = 0; i < _objectNum; i++){
+			_polygonShapes[i].draw();
+		}
 
-		_polygonShape->draw();
-
-		//_light.end();
-		_light.disable();
 
 	}
 	ofPopMatrix();
 
+	_light.disable();
 	_ccam.end();
 
 
 	_frameCounter++;
+
 
 }
 
@@ -199,7 +252,6 @@ void App::exit(){
 
 #ifdef SOUND_DEVICE_ENABLE
 	_soundStream.close();
-	delete[] _left;
 #endif
 
 }
@@ -243,13 +295,22 @@ void App::keyPressed(int key){
 
 	// オブジェクトの位置をデフォルトに戻す
 	if(key == 'r'){
-		_polygonShape->resetCurrentPos();
+		_polygonShapes[_activeObject].resetCurrentPos();
 	}
 
 	// カメラをオブジェクトに沿って動かすかどうかを決める
 	if(key == 'm'){
 		_camMoveEnable = !_camMoveEnable;
 		_camStayPos    = _camBasePos;
+	}
+
+	// トラックするオブジェクトを変更
+	if(key == 's'){
+
+		_activeObject++;
+
+		if(_objectNum == _activeObject) _activeObject = 0;
+
 	}
 
 }

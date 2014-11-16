@@ -11,19 +11,22 @@ class PolygonShape{
 
 public:
 
-	PolygonShape();
+	PolygonShape(const int type = 0);
 	virtual ~PolygonShape();
 
 	virtual void setup();
 	virtual void update();
 	virtual void draw();
 
-	ofVec3f getCurrentPos();         // 現在の座標を取得する
-	void    resetCurrentPos();
+	ofVec3f getCurrentPos();            // 現在の座標を取得する
+	void    resetCurrentPos();          // オブジェクトを初期位置に戻す
 
 
 protected:
 
+	int            _objectType;         // オブジェクトの性質を決定
+
+	ofVec3f        _initalPos;          // 最初の位置
 	ofVec3f        _currentPos;         // 中心座標
 	ofVec3f        _moveDir;            // オブジェクトの進行方向
 	ofVec3f        _velocity;           // 速度ベクトル
@@ -33,12 +36,12 @@ protected:
 	float          _velocitySize;       // 速さ(スカラー値)
 	float          _velocitySizeLimit;  // 速さのリミット
 	float          _frictionSize;       // 摩擦(もどき)の大きさ(スカラー値)
-	float          _angle;              // オブジェクトの時点角度
+	float          _angle;              // オブジェクトの自転角度
 
 
 	int                 _vboIndex;      // 中心座標のリセット毎に追加するvboのインデックス
 	std::vector<ofMesh> _pathLines;     // 移動履歴の頂点情報
-	std::vector<ofVbo> _vbos;
+	std::vector<ofVbo>  _vbos;
 
 	int                _actionFrame;    // 次に速度ベクトルを変更するフレーム
 	int                _frameCount;     // フレーム数のカウント

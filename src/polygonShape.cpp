@@ -1,6 +1,56 @@
 #include "polygonShape.h"
 
-PolygonShape::PolygonShape(){
+/**
+ * オブジェクトの性質を決定
+ */
+PolygonShape::PolygonShape(const int type){
+
+	_objectType = type;
+
+	switch(_objectType){
+
+	case 0:
+
+		srand(static_cast<unsigned int>(time(NULL)));
+		
+		_initalPos = ofVec3f(0.0, 0.0, 0.0);
+	
+		_ambient  = ofFloatColor(0.3, 0.3, 0.3, 0.9);
+		_diffuse  = ofFloatColor(0.1, 0.8, 0.3, 0.9);
+		_specular = ofFloatColor(0.8, 0.8, 0.8, 0.9);
+		_shininess  = 100.0;
+	
+		break;
+	
+	case 1:
+
+		srand(static_cast<unsigned int>(time(NULL) + time(NULL)));
+
+		_initalPos = ofVec3f(0.0, 0.0, 50.0);
+	
+		_ambient  = ofFloatColor(0.3, 0.3, 0.3, 0.9);
+		_diffuse  = ofFloatColor(0.3, 0.6, 0.9, 0.9);
+		_specular = ofFloatColor(0.8, 0.8, 0.8, 0.9);
+		_shininess  = 100.0;
+	
+		break;
+
+	case 2:
+
+		srand(static_cast<unsigned int>(time(NULL) + time(NULL) + time(NULL)));
+		
+		_initalPos = ofVec3f(0.0, 0.0, -50.0);
+
+		_ambient  = ofFloatColor(0.3, 0.3, 0.3, 0.9);
+		_diffuse  = ofFloatColor(0.4, 0.9, 0.6, 0.9);
+		_specular = ofFloatColor(0.8, 0.8, 0.8, 0.9);
+		_shininess  = 100.0;
+
+		break;
+
+	}
+
+
 }
 
 
@@ -14,7 +64,8 @@ void PolygonShape::setup(){
 	_prevTime = ofGetElapsedTimef();
 	_vboIndex = 0;
 
-	_currentPos = ofVec3f(0.0, 0.0, 0.0);
+	_currentPos = _initalPos;
+
 
 	// _pathLinesの初期化
 	ofMesh mesh;
@@ -44,18 +95,10 @@ void PolygonShape::setup(){
 	_frameCount   = 0;
 
 
-
-
 	this->setMoveDir();
 	this->setFriction();
 	this->setVelocity();
 
-
-	// ライティングの設定
-	_ambient  = ofFloatColor(0.1, 0.4, 0.1, 1.0);
-	_diffuse  = ofFloatColor(0.2, 0.7, 0.2, 1.0);
-	_specular = ofFloatColor(1.0, 1.0, 1.0, 1.0);
-	_shininess  = 100.0;
 
 	_material.setAmbientColor(_ambient);
 	_material.setDiffuseColor(_diffuse);
@@ -107,22 +150,25 @@ void PolygonShape::draw(){
 	ofPushMatrix();
 	{
 		ofRotate(_angle, _currentPos.x, _currentPos.y, _currentPos.z);
-		
+
 		_material.begin();
 
-		ofSetSphereResolution(3);
-		ofDrawSphere(_currentPos, 5.0);
+		ofSetIcoSphereResolution(1);
+		ofDrawIcoSphere(_currentPos, 5.0);
 
 		_material.end();
 	
 	}
 	ofPopMatrix();
 
+
 	ofSetLineWidth(1.0);
 
 	for(int i = 0; i < _pathLines.size(); i++){
 		_vbos[i].draw(GL_LINE_STRIP, 0, _pathLines[i].getNumVertices());
 	}
+
+
 
 }
 
@@ -147,7 +193,9 @@ void PolygonShape::setMoveDir(){
 	// 4 : Z軸方向(+)
 	// 5 : Z軸方向(-)
 	// ofRandomはfloat方の値が帰ってくるため、rand関数を使用する
-	srand(static_cast<unsigned int>(time(NULL)));
+
+
+
 	int dir = rand() % 6;
 
 
