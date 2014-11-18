@@ -1,6 +1,6 @@
 #include "polygonShapeSound.h"
 
-PolygonShapeSound::PolygonShapeSound(){
+PolygonShapeSound::PolygonShapeSound(const int type) : PolygonShape(type){
 }
 
 PolygonShapeSound::~PolygonShapeSound(){
@@ -40,12 +40,6 @@ void PolygonShapeSound::setup(){
 	this->setFriction();
 	this->setVelocity();
 
-
-	// ライティングの設定
-	_ambient  = ofFloatColor(0.1, 0.4, 0.1, 1.0);
-	_diffuse  = ofFloatColor(0.2, 0.7, 0.2, 1.0);
-	_specular = ofFloatColor(1.0, 1.0, 1.0, 1.0);
-	_shininess  = 100.0;
 
 	_material.setAmbientColor(_ambient);
 	_material.setDiffuseColor(_diffuse);

@@ -8,7 +8,7 @@ class PolygonShapeSound : public PolygonShape {
 
 public:
 
-	PolygonShapeSound();
+	PolygonShapeSound(const int type = 0);
 	virtual ~PolygonShapeSound();
 
 	virtual void setup();

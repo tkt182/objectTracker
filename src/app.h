@@ -1,5 +1,5 @@
 #include <vector>
-#include <deque>
+#include <new>
 #include <cstdio>
 #include <ctime>
 
@@ -48,7 +48,6 @@ class App : public ofBaseApp{
 
 		ofVec3f _targetPos;             // 現在のオブジェクトの位置
 
-
 		bool    _camMoveEnable;         // カメラの位置を動かすか、位置を固定するかのフラグ
 		ofVec3f _camStayPos;            // カメラ固定時の位置
 
@@ -65,7 +64,12 @@ class App : public ofBaseApp{
 
 		CustomCam _ccam;                // カメラ
 		ofLight   _light;               // ライト
+		
+		std::vector<ofLight> _lights;
 
+
+		int       _objectNum;
+		int       _activeObject;
 
 #ifdef SOUND_DEVICE_ENABLE
 
@@ -75,11 +79,12 @@ class App : public ofBaseApp{
 		void audioIn(float* input, int bufferSize, int nChannels);
 
 		PolygonShapeSound* _polygonShape;    // ターゲットオブジェクト(オーディオ入力あり)
-
+		PolygonShapeSound* _polygonShapes;   // ターゲットオブジェクト(オーディオ入力あり)
 
 #else
 
 		PolygonShape* _polygonShape;         // ターゲットオブジェクト
+		PolygonShape* _polygonShapes;
 
 #endif
 		// 背景に表示する球

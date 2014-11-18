@@ -114,6 +114,16 @@ void CustomCam::lookAt(){
 
 
 /**
+ * カメラの位置を取得する
+ */
+ofVec3f CustomCam::getPosition(){
+
+	return _pos;
+
+}
+
+
+/**
  * カメラ-注視点間の距離を変更する
  */
 void CustomCam::updateDistance(const float moveDistance){
