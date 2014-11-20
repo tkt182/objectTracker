@@ -112,6 +112,7 @@ void PolygonShape::setup(){
 
 void PolygonShape::update(){
 
+
 	this->updateTimeStep();
 
 	if(_frameCount > _actionFrame){
@@ -146,6 +147,7 @@ void PolygonShape::update(){
 
 
 void PolygonShape::draw(){
+
 
 	ofPushMatrix();
 	{
@@ -260,12 +262,17 @@ void PolygonShape::setFriction(){
 
 void PolygonShape::updateCurrentPos(){
 
-	_velocity += _friction * _timeDiff;
 
-	// 速度ベクトルの大きさが1.0以上の場合は、
-	// まだオブジェクトが動いているとする
-	if(_velocity.length() > 1.0){
+	ofVec3f attenuation = _friction * _timeDiff;    // 摩擦によって減衰する速度
+
+
+	if(_velocity.length() > attenuation.length()){
+		
+		// 現時点の速度の大きさが減衰速度の大きさより大きい場合、
+		// オブジェクトはまだ動いていると判断する
+		_velocity   += attenuation;
 		_currentPos += _velocity;
+	
 	}
 	
 }

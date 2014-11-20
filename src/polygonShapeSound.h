@@ -14,17 +14,20 @@ public:
 	virtual void setup();
 	virtual void update();
 
-	void setPower(const float power);
-
+	void         setMagnitude(const float magnitude);
+	void         changeMoveMode();
 
 private:
 
-	float  _powerLevel;     // 速度ベクトルを更新する際の閾値
-	float  _power;
+	bool   _enableAutoMove;         // オブジェクトを自動で動かすか、音声入力を利用するか
+
+	float  _magnitudeThresHold;     // 入力の閾値(速度ベクトルを更新する際に利用)
+	float  _magnitude;              // 入力の大きさ
 
 	virtual void setVelocity();
-	void setFrictionSize();
 
+
+	float clampf(float value, float min, float max);
 
 };
 

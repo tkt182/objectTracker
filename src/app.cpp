@@ -18,6 +18,7 @@ App::~App(){
 	delete _stars;
 
 #ifdef SOUND_DEVICE_ENABLE
+	delete _fft;
 	delete[] _left;
 #endif
 
@@ -58,11 +59,14 @@ void App::setup(){
 #ifdef SOUND_DEVICE_ENABLE
 
 	_soundStream.listDevices();
-	_soundStream.setDeviceID(1);
+	//_soundStream.setDeviceID(1);
 	_soundStream.setup(this, 0, 2, 44100, BUFFER_SIZE, 4);
 
 	_left     = new float[BUFFER_SIZE];
 	_maxPower = 0.0;
+
+
+	_fft      = new Fft();
 
 
 	// メインオブジェクトの設定
@@ -79,9 +83,6 @@ void App::setup(){
 	for(int i = 0; i < _objectNum; i++){
 		new(_polygonShapes + i) PolygonShape(i);
 		_polygonShapes[i].setup();
-		
-		_lights.push_back(ofLight());
-	
 	}
 
 
@@ -90,7 +91,7 @@ void App::setup(){
 
 	// カメラ関連の設定
 	_waitFrameNum   = 3;
-	_frameCounter   = 0;
+	_frameCount     = 0;
 	_camMoveEnable  = true;
 
 
@@ -118,9 +119,29 @@ void App::update(){
 
 #ifdef SOUND_DEVICE_ENABLE
 
-	for(int i = 0; i < _objectNum; i++){
-		_polygonShapes[i].setPower(_maxPower);
+	float avePower = 0.0;
+
+	_fft->PowerSpectrum(0, static_cast<int>(BUFFER_SIZE/2),
+		_left, BUFFER_SIZE, _magnitude, _phase, _power, &avePower);
+
+	// audioIn関数が実行される前に計算したパワースペクトルはゴミデータが入っているため、
+	// そのデータは使わない
+	if(_frameCount == 0){
+
+		for(int i = 0; i < _objectNum; i++){
+			_polygonShapes[i].setMagnitude(0.0);
+		}
+	
+	}else{
+	
+		// 使う周波数成分は、3から始まる奇数の値(綺麗に動いたため)
+		for(int i = 0; i < _objectNum; i++){
+			_polygonShapes[i].setMagnitude(_magnitude[(2*i)+3]);
+		}
+	
 	}
+
+
 
 #endif
 
@@ -132,12 +153,12 @@ void App::update(){
 
 
 	// 指定されたフレーム数ごとにカメラの移動ベクトルを変更する
-	if(_frameCounter == _waitFrameNum){
+	if(_frameCount == _waitFrameNum){
 
 		_camDistination = _targetPos;
 		_camVelocity    = (_camDistination - _camBasePos) * 0.1;
 
-		_frameCounter = 0;
+		_frameCount = 0;
 	
 	}
 
@@ -242,7 +263,7 @@ void App::draw(){
 	_ccam.end();
 
 
-	_frameCounter++;
+	_frameCount++;
 
 
 }
@@ -312,6 +333,17 @@ void App::keyPressed(int key){
 		if(_objectNum == _activeObject) _activeObject = 0;
 
 	}
+
+#ifdef SOUND_DEVICE_ENABLE
+
+	// オブジェクトを自動で動かすか、音声入力で動かすかを決める
+	if(key == 'a'){
+		for(int i = 0; i < _objectNum; i++){
+			_polygonShapes[i].changeMoveMode();
+		}
+	}
+
+#endif
 
 }
 
