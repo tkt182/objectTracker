@@ -3,6 +3,9 @@
 
 CustomCam::CustomCam(float distance){
 
+
+	this->setFarClip(10000.0);
+
 	// カメラと注視点の距離 
 	_distance = distance;
 
@@ -22,9 +25,9 @@ CustomCam::~CustomCam(){
 /**
  * カメラの基本位置を決定
  */
-void CustomCam::setCamPos(const ofVec3f camPos){
+void CustomCam::setCamBasePos(const ofVec3f camBasePos){
 
-	_pos = camPos;
+	_pos = camBasePos;
 }
 
 
@@ -107,6 +110,16 @@ void CustomCam::setPosition(){
 void CustomCam::lookAt(){
 
 	ofCamera::lookAt(_targetPos, _upVec);
+}
+
+
+/**
+ * カメラの位置を取得する
+ */
+ofVec3f CustomCam::getPosition(){
+
+	return _pos;
+
 }
 
 

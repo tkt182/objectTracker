@@ -8,7 +8,7 @@ class Stars{
 public:
 
 	Stars(int num = 1000, float radius = 4.0);
-	~Stars();
+	virtual ~Stars();
 
 	void setup();
 	void draw();
@@ -20,6 +20,8 @@ private:
 	float    _radius;   // 球の半径
 	float    _limit;    // 球の座標を生成する際のMAX値
 	ofVec3f* _pos;      // 球の中心座標
+
+	ofFloatColor  _color;    // 球の色
 
 
 };

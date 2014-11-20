@@ -11,11 +11,11 @@ public:
 
 
 	CustomCam(float distance = 100.0);
-	~CustomCam();
+	virtual ~CustomCam();
 
 
 	// カメラの基本位置を決定
-	void setCamPos(const ofVec3f camPos);
+	void setCamBasePos(const ofVec3f camBasePos);
 	
 	// カメラの注視点を決定
 	void setTargetPos(const ofVec3f targetPos);
@@ -38,6 +38,8 @@ public:
 	void setPosition();
 	void lookAt();
 
+	ofVec3f getPosition();
+
 
 	// カメラ-注視点間の距離を変更する
 	void updateDistance(const float moveDistance);
@@ -54,6 +56,7 @@ public:
 	ofVec3f getCamXAxis();
 	ofVec3f getCamYAxis();
 	ofVec3f getCamZAxis();
+
 
 
 

@@ -9,7 +9,7 @@ Stars::Stars(int num, float radius){
 
 	_limit  = 5000.0;
 	
-
+	
 }
 
 Stars::~Stars(){
@@ -30,12 +30,15 @@ void Stars::setup(){
 	
 	}
 
+	_color = ofFloatColor(1.0, 1.0, 1.0, 1.0);
+
 }
 
 void Stars::draw(){
 
 	for(int i = 0; i < _num; i++){
 	
+		ofSetColor(_color);
 		ofSetSphereResolution(4);
 		ofDrawSphere(_pos[i], _radius);
 	

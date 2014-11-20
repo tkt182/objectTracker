@@ -1,0 +1,5 @@
+obj/*
+objectTracker.vcxproj.user
+*.sdf
+*.suo
+*.exe
